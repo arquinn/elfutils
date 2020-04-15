@@ -56,8 +56,9 @@ get_zdata (Elf_Scn *strscn)
 static bool validate_str (const char *str, size_t from, size_t to)
 {
 #if HAVE_DECL_MEMRCHR
-  return memrchr (&str[from], '\0', to - from) != NULL;
-#else
+  if (to - from >= 8) // weird endpoint.. but my memrchr for some reason reads too far o/w...? CARP
+    return memrchr (&str[from], '\0', to - from) != NULL;
+#endif
   do {
     if (to <= from)
       return false;
@@ -66,7 +67,7 @@ static bool validate_str (const char *str, size_t from, size_t to)
   } while (str[to]);
 
   return true;
-#endif
+
 }
 
 char *
