@@ -57,7 +57,8 @@ static bool validate_str (const char *str, size_t from, size_t to)
 {
 #if HAVE_DECL_MEMRCHR
   if (to - from >= 8) // weird endpoint.. but my memrchr for some reason reads too far o/w...? CARP
-    return memrchr (&str[from], '\0', to - from) != NULL;
+    return strnlen(&str[from], to - from) < to - from || !str[to];
+    // return memrchr (&str[from], '\0', to - from) != NULL;
 #endif
   do {
     if (to <= from)
